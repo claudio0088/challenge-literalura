@@ -1,8 +1,11 @@
 package br.com.alura.literalura.principal;
 
 import br.com.alura.literalura.model.DadosLivros;
+import br.com.alura.literalura.model.Livro;
+import br.com.alura.literalura.repository.LivroRepository;
 import br.com.alura.literalura.service.ConsumoApi;
 import br.com.alura.literalura.service.ConverteDados;
+import br.com.alura.literalura.service.RespostaAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,26 +14,29 @@ import java.util.Scanner;
 public class Principal {
 
     private Scanner leitura = new Scanner(System.in);
-    private final String ENDERECO ="https://gutendex.com/books";
+    private final String ENDERECO ="https://gutendex.com/books?search=";
     private ConsumoApi consumo = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
     private List<DadosLivros> dadosLivos = new ArrayList<>();
 
-    public List<DadosLivros> getDadosLivos() {
-        return dadosLivos;
+    private LivroRepository repositorio;
+
+    public Principal(LivroRepository repositorio) {
+        this.repositorio = repositorio;
     }
 
-    public void setDadosLivos(List<DadosLivros> dadosLivos) {
-        this.dadosLivos = dadosLivos;
-    }
 
     public void exibeMenu(){
         var opcoes = -1;
 
-        while(opcoes == 0){
+        while(opcoes != 0){
             var menu = """
                     *********************************************************
-                    1 - buscar livros
+                    1 - buscar livros pelo título
+                    2 - listar livros registrados
+                    3 - listar autores registrados
+                    4 - listar autores vivos em um determinado ano
+                    5 - listar livros em um determinado idioma
                     
                     0 - sair
                     *********************************************************
@@ -58,17 +64,20 @@ public class Principal {
 
     private void buscarLivro() {
         DadosLivros dados = getDadosLivros();
-        //Serie serie = new Serie(dados);
+        Livro livro = new Livro(dados);
         dadosLivos.add(dados);
-        //repositorio.save(serie);
+        //repositorio.save(livro);
         System.out.println(dados);
     }
 
     private DadosLivros getDadosLivros(){
         System.out.println("Digite o nome do livro para busca");
         var nomeLivro = leitura.nextLine();
-        var json = consumo.obterDados(ENDERECO + "?search=" + nomeLivro.replace(" ", "%20"));
-        DadosLivros dados = conversor.buscaDados(json, DadosLivros.class);
+        var json = consumo.obterDados(ENDERECO +  nomeLivro.replace(" ", "+"));
+
+        RespostaAPI resposta = conversor.buscaDados(json, RespostaAPI.class);
+        List<DadosLivros> livros = resposta.getResults();
+        DadosLivros dados = livros.get(0);
         return dados;
     }
 }

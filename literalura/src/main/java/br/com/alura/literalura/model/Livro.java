@@ -3,8 +3,6 @@ package br.com.alura.literalura.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
 @Table(name = "livros")
 public class Livro {
@@ -25,11 +23,11 @@ public class Livro {
      public Livro() {}
 
 
-     public Livro(DadosLivros dadosLivros){
+     /*public Livro(DadosLivros dadosLivros){
          this.titulo = dadosLivros.titulo();
-         this.linguagem = dadosLivros.linguagem();
+         this.linguagem = dadosLivros.linguagens();
          this.numeroDownloads = dadosLivros.numeroDownloads();
-     }
+     }*/
 
     public String getTitulo() {
         return titulo;
@@ -72,11 +70,12 @@ public class Livro {
 
     @Override
     public String toString() {
-        return "******** LIVRO ********" +
-                "Título: " + titulo +
-                "Autor: " + autor +
-                "Linguagem: " + linguagem + '\'' +
-                "Numero de downloads:" + numeroDownloads+
-                "**********************";
+        return "--------------------- LIVRO ---------------------\n" +
+                "Título              : " + titulo + "\n" +
+                "Autor               : " +  autor +"\n" +
+                "idioma              : " + linguagem +"\n" +
+                "Número de downloads : " + numeroDownloads +"\n" +
+                "--------------------------------------------------";
+
     }
 }

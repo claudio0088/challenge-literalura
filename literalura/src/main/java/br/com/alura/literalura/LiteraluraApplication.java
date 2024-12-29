@@ -17,11 +17,11 @@ public class LiteraluraApplication implements CommandLineRunner {
 	}
 
 	@Autowired
-	private LivroRepository repositorio;
+	private Principal principal;
 
 	@Override
 	public void run(String... args) throws Exception {
-		Principal principal = new Principal(repositorio);
+		Principal principal = new Principal();
 		principal.exibeMenu();
 
 
